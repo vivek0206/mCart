@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ProfileActivity"
+    android:orientation="vertical"
+    android:paddingBottom="0dp"
+    >
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+    <ImageView
+        android:id="@+id/p_Profile"
+        android:layout_width="210dp"
+        android:layout_height="210dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:background="@mipmap/ic_launcher_round" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="250dp"
+        >
+
+        <TextView
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:text="UserName:"
+            android:textSize="25dp"/>
+
+        <TextView
+            android:id="@+id/p_name"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:text="Name"
+            android:textSize="25dp"
+            android:textStyle="bold" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="300dp"
+        >
+        <TextView
+            android:layout_width="90dp"
+            android:layout_height="50dp"
+            android:text="Email:"
+            android:textSize="25dp"/>
+
+        <TextView
+            android:id="@+id/p_email"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:text="Email@gmail.com"
+            android:textSize="25dp"
+            android:textStyle="bold" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="360dp"
+        >
+        <TextView
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:text="Contact No:"
+            android:textSize="25dp"/>
+
+        <TextView
+            android:id="@+id/p_phone"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:text="xxxxxxxxxx"
+            android:textSize="25dp"
+            android:textStyle="bold" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="420dp"
+        >
+        <TextView
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:text="Hostel:"
+            android:textSize="25dp"/>
+
+        <TextView
+            android:id="@+id/p_Hostel"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:text="Ex-Svbh"
+            android:textSize="25dp"
+            android:textStyle="bold" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="480dp"
+        >
+        <TextView
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:text="Room No:"
+            android:textSize="25dp"/>
+
+        <TextView
+            android:id="@+id/p_Room"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:text="Ex-213"
+            android:textSize="25dp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+    <Button
+        android:id="@+id/up_Profile"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:hint="UpdateProfile"
+        android:textSize="20dp"
+        android:layout_marginTop="540dp"/>
+    </RelativeLayout>
+
+
+</ScrollView>

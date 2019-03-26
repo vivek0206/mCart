@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ProductActivity">
+    <ImageView
+        android:id="@+id/pimage"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:background="@mipmap/ic_launcher_round"
+        android:layout_margin="80dp"/>
+
+    <TextView
+        android:id="@+id/pname"
+        android:layout_marginTop="350dp"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:hint="name"
+        android:layout_marginLeft="40dp"
+        android:textSize="40dp"
+        />
+    <TextView
+        android:id="@+id/pprice"
+        android:layout_marginTop="410dp"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:hint="Price"
+        android:layout_marginLeft="40dp"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="30dp"
+        />
+    <TextView
+        android:id="@+id/pinfo"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="460dp"
+        android:hint="Product Description"
+        android:textSize="20dp"
+        android:layout_marginLeft="40dp"
+        />
+    <Button
+        android:id="@+id/btn_buy"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:textSize="30dp"
+        android:text="Buy now"
+        android:layout_alignParentBottom="true"/>
+
+</RelativeLayout>
