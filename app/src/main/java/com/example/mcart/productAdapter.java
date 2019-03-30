@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -63,7 +64,7 @@ public class productAdapter extends RecyclerView.Adapter<productAdapter.productV
             }
         });
 
-        productViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+        productViewHolder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent=new Intent(mctx , ProductActivity.class);
@@ -71,11 +72,18 @@ public class productAdapter extends RecyclerView.Adapter<productAdapter.productV
                 intent.putExtra("ProductPrice",pro_content.getPro_price());
                 intent.putExtra("ProductInfo",pro_content.getPro_info());
                 intent.putExtra("ProductImage",pro_content.getImg_url());
+                intent.putExtra("ProductId",pro_content.getImg_url());
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 mctx.startActivity(intent);
 
             }
         });
+       productViewHolder.wish_list.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View v) {
+               productViewHolder.wish_list.setImageResource(R.drawable.favred);
+           }
+       });
 
     }
 
@@ -86,13 +94,17 @@ public class productAdapter extends RecyclerView.Adapter<productAdapter.productV
 
     class productViewHolder extends RecyclerView.ViewHolder{
         TextView prodName,prodInfo;
-        ImageView imageView;
+        ImageView imageView,wish_list;
+
 
         public productViewHolder(@NonNull View itemView) {
             super(itemView);
             prodName=itemView.findViewById(R.id.prodName);
             prodInfo=itemView.findViewById(R.id.prodInfo);
             imageView=itemView.findViewById(R.id.imageView);
+            wish_list=itemView.findViewById(R.id.wishlist);
+
+
 
         }
     }

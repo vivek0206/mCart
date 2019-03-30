@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -20,6 +21,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageException;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
@@ -49,22 +51,37 @@ public class ProfileActivity extends AppCompatActivity {
         firebaseStorage= FirebaseStorage.getInstance();
 
         DatabaseReference ref=firebaseDatabase.getReference("Users").child(firebaseAuth.getUid());
-        final StorageReference storageReference=firebaseStorage.getReference();
-        storageReference.child(firebaseAuth.getUid()).child("Profile Pic").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                Picasso.get().load(uri).fit().centerCrop().into(imgProfile);
-            }
-        });
+
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                userprofile userprofile=dataSnapshot.getValue(userprofile.class);
-                pname.setText(userprofile.getUsername());
-                pemail.setText(userprofile.getEmail());
-                phostel.setText(userprofile.getHostel());
-                proom.setText(userprofile.getRoom());
-                pcontact.setText(userprofile.getContact());
+
+                    if (dataSnapshot.exists()) {
+                        // Do stuff
+                        userprofile userprofile=dataSnapshot.getValue(userprofile.class);
+                        pname.setText(userprofile.getUsername());
+                        pemail.setText(userprofile.getEmail());
+                        phostel.setText(userprofile.getHostel());
+                        proom.setText(userprofile.getRoom());
+                        pcontact.setText(userprofile.getContact());
+                        final StorageReference storageReference=firebaseStorage.getReference();
+
+
+                        storageReference.child(firebaseAuth.getUid()).child("Profile Pic").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                Picasso.get().load(uri).fit().centerCrop().into(imgProfile);
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure (@NonNull Exception exception){
+                                // File not found
+                            }
+
+                        });
+                    }
+
+
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {

@@ -16,10 +16,17 @@
         >
     </item>
     <item
-        android:id="@+id/refreshMenu"
+        android:id="@+id/wishlist"
         android:orderInCategory="300"
         apps:showAsAction="never"
-        android:title="refresh"
+        android:title="WishList"
+        >
+    </item>
+    <item
+        android:id="@+id/logout"
+        android:orderInCategory="300"
+        apps:showAsAction="never"
+        android:title="Log"
         >
     </item>
 </menu>

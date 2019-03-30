@@ -17,8 +17,8 @@
 
             <ImageView
                 android:id="@+id/imageView"
-                android:layout_width="300dp"
-                android:layout_height="200dp"
+                android:layout_width="390dp"
+                android:layout_height="250dp"
                 android:background="@mipmap/ic_launcher_round"/>
 
             <TextView
@@ -41,6 +41,12 @@
                 android:text="product info"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                 android:textColor="#555" />
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:id="@+id/wishlist"
+                android:background="@drawable/fav" />
+
 
 
 

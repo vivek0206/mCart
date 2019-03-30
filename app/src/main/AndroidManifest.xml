@@ -9,14 +9,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".UpdateProfileActivity"></activity>
+        <activity android:name=".WishlistActivity"></activity>
+        <activity android:name=".UpdateProfileActivity" />
         <activity android:name=".ProfileActivity" />
         <activity android:name=".ProductActivity" />
         <activity android:name=".sellActivity" />
         <activity android:name=".RegActivity" />
         <activity android:name=".LoginActivity" />
         <activity android:name=".startActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

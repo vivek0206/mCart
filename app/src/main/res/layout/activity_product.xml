@@ -3,49 +3,93 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     tools:context=".ProductActivity">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="670dp">
     <ImageView
         android:id="@+id/pimage"
-        android:layout_width="250dp"
+        android:layout_width="350dp"
         android:layout_height="250dp"
         android:background="@mipmap/ic_launcher_round"
-        android:layout_margin="80dp"/>
+        android:layout_marginTop="10dp"
+        android:layout_marginHorizontal="40dp"
+        />
 
     <TextView
         android:id="@+id/pname"
-        android:layout_marginTop="350dp"
+        android:layout_marginTop="270dp"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:hint="name"
-        android:layout_marginLeft="40dp"
+        android:layout_marginLeft="50dp"
         android:textSize="40dp"
         />
-    <TextView
-        android:id="@+id/pprice"
-        android:layout_marginTop="410dp"
+
+        <TextView
+            android:id="@+id/pprice"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginLeft="50dp"
+            android:layout_marginTop="340dp"
+            android:hint="@string/price"
+            android:textAllCaps="false"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="30dp" />
+        <TableRow
+            android:id="@+id/hr"
+            android:layout_width="match_parent"
+            android:layout_marginHorizontal="15dp"
+            android:layout_height="2dp"
+            android:layout_marginTop="402dp"
+            android:background="#333"></TableRow>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="420dp"
+            android:text="Details"
+            android:textColor="@color/common_google_signin_btn_text_dark_focused"
+            android:textSize="30sp" />
+
+        <TextView
+            android:id="@+id/pinfo"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="470dp"
+            android:hint=" * Product Description"
+            android:textSize="20dp"
+            tools:capitalize="words" />
+
+    </RelativeLayout>
+    </ScrollView>
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:hint="Price"
-        android:layout_marginLeft="40dp"
-        android:textColor="@color/colorPrimaryDark"
-        android:textSize="30dp"
-        />
-    <TextView
-        android:id="@+id/pinfo"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_marginTop="460dp"
-        android:hint="Product Description"
-        android:textSize="20dp"
-        android:layout_marginLeft="40dp"
-        />
-    <Button
-        android:id="@+id/btn_buy"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:textSize="30dp"
-        android:text="Buy now"
-        android:layout_alignParentBottom="true"/>
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dp">
+
+        <Button
+            android:id="@+id/btn_wishlist"
+            android:layout_width="201dp"
+            android:layout_height="60dp"
+            android:text="Wishlist"
+            android:textSize="20dp" />
+        <Button
+            android:id="@+id/btn_buy"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:textSize="20dp"
+            android:text="Buy now"
+
+            />
+    </LinearLayout>
+
 
 </RelativeLayout>
