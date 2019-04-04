@@ -21,7 +21,7 @@ public class WishlistActivity extends AppCompatActivity {
 
     RecyclerView recyclerView;
     List<Pro_content> Pro_content;
-    productAdapter adapter;
+    wishlistAdapter adapter;
     DatabaseReference reference;
     FirebaseAuth firebaseAuth;
 
@@ -82,10 +82,10 @@ public class WishlistActivity extends AppCompatActivity {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                    Toast.makeText(WishlistActivity.this, "getting", Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(WishlistActivity.this, "getting", Toast.LENGTH_SHORT).show();
                     Pro_content chat = dataSnapshot.getValue(Pro_content.class);
                     Pro_content.add(chat);
-                    adapter = new productAdapter(WishlistActivity.this, Pro_content);
+                    adapter = new wishlistAdapter(WishlistActivity.this, Pro_content);
                     recyclerView.setAdapter(adapter);
                 }
                 @Override

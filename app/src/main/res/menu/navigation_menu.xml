@@ -2,15 +2,41 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
-    <item android:id="@+id/back"
-        android:icon="@drawable/back"
-        android:title=" "/>
-    <group>
-    <item android:id="@+id/title"
-    android:title="Calculator"/>
-    <item android:id="@+id/title1"
-        android:title="Cooler"/>
-    <item android:id="@+id/title2"
-        android:title="bicycle"/>
+    <group
+        android:id="@+id/menu_top"
+        android:checkableBehavior="single">
+        <item android:id="@+id/back"
+            android:icon="@drawable/back"
+            android:title=" "
+            />
     </group>
+    <group
+        android:id="@+id/menu_middle"
+        android:checkableBehavior="single">
+
+        <item android:id="@+id/title"
+        android:title="Calculator" />
+        <item android:id="@+id/title1"
+            android:title="Cooler"/>
+        <item android:id="@+id/title2"
+            android:title="bicycle"/>
+        <item android:id="@+id/title3"
+            android:title="Drawfter"/>
+    </group>
+    <group
+        android:id="@+id/menu_bottom"
+        android:checkableBehavior="none">
+        <item
+            android:id="@+id/nav_profile"
+            android:title="Profile" >
+        </item>
+        <item
+            android:id="@+id/nav_logout"
+            android:title="Logout" >
+        </item>
+
+    </group>
+
+
+
 </menu>

@@ -1,5 +1,7 @@
 package com.example.mcart;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -10,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -17,7 +20,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
+
 import android.widget.Toast;
 
 import com.google.firebase.FirebaseApp;
@@ -32,14 +38,16 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,SearchView.OnQueryTextListener {
 
     private FirebaseAuth mAuth;
     RecyclerView recyclerView;
-    List<Pro_content>Pro_content;
+    List<Pro_content>Pro_content=new ArrayList<>();
     productAdapter adapter;
     DatabaseReference reference;
     FirebaseAuth firebaseAuth;
+
+    ArrayAdapter<String> slist;
 
 
     DrawerLayout drawer;
@@ -52,8 +60,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu,menu);
+       //
+        // MenuItem menuItem=findViewById(R.id.search);
+//        SearchView searchView=(SearchView)menuItem.getActionView();
+        SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
+        searchView.setOnQueryTextListener(this);
+
         return true;
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -68,9 +83,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startActivity(new Intent(MainActivity.this,WishlistActivity.class));
         }
         if(id == R.id.logout){
-            firebaseAuth=FirebaseAuth.getInstance();
-            firebaseAuth.signOut();
-            startActivity(new Intent(MainActivity.this,startActivity.class));
+            logout();
 
         }
         return super.onOptionsItemSelected(item);
@@ -86,20 +99,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
         recyclerView=findViewById(R.id.recyclerView);
@@ -144,28 +143,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
            // finish();
         }
     }
-   /*@Override
-   public void onBackPressed() {
-       DrawerLayout drawer = (DrawerLayout) findViewById(R.id.sidebar);
-       if (drawer.isDrawerOpen(GravityCompat.START)) {
-           drawer.closeDrawer(GravityCompat.START);
-       } else {
-           super.onBackPressed();
-       }
-   }
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // The action bar home/up action should open or close the drawer.
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                drawer.openDrawer(GravityCompat.START);
-                return true;
-        }
 
-        return super.onOptionsItemSelected(item);
-    }*/
     private void readMessage(){
-        Pro_content =new ArrayList<>();
+        //Pro_content =
         reference= FirebaseDatabase.getInstance().getReference("sellContent");
         reference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -199,6 +179,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.title2) {
             Toast.makeText(MainActivity.this,"title2",Toast.LENGTH_SHORT).show();
         }
+        else if (id == R.id.nav_profile) {
+            startActivity(new Intent(MainActivity.this,ProfileActivity.class));
+        } else if (id == R.id.nav_logout) {
+            logout();
+        }
         else if (id == R.id.back) {
             drawer.closeDrawer(GravityCompat.START);
         }
@@ -206,5 +191,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer.closeDrawer(GravityCompat.START);
         return true;
 
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String s) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String s) {
+        String userinput=s.toLowerCase();
+        List<Pro_content> newList=new ArrayList<>();
+        for(Pro_content pro:Pro_content)
+        {
+            if(pro.getPro_name().toLowerCase().contains(userinput))
+            {
+                newList.add(pro);
+            }
+        }
+        adapter.updateList(newList);
+        return true;
+    }
+    public void logout(){
+        firebaseAuth=FirebaseAuth.getInstance();
+        firebaseAuth.signOut();
+        startActivity(new Intent(MainActivity.this,startActivity.class));
     }
 }

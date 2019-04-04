@@ -1,11 +1,19 @@
 package com.example.mcart;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -24,8 +32,14 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 public class sellActivity extends AppCompatActivity {
     EditText Pro_name,Pro_info,Pro_price,Pro_address;
@@ -35,14 +49,20 @@ public class sellActivity extends AppCompatActivity {
     FirebaseUser fuser;
     DatabaseReference reference;
     ImageView prod_img;
-    private static int PICK_IMAGE=123;
-    Uri imagePath;
+    private static int CAMERA_REQUEST_CODE=1;
+    Uri imagePath=null;
     FirebaseStorage firebaseStorage;
     String productId;
+    String[] appPermissions={
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.CAMERA
+    };
+    private static final int PERMISSIONS_REQUEST_CODE=1240;
 
 
 
-    @Override
+
+   /* @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if(requestCode==PICK_IMAGE && resultCode==RESULT_OK&&data.getData()!=null){
             imagePath=data.getData();
@@ -55,7 +75,41 @@ public class sellActivity extends AppCompatActivity {
 
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }*/
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==CAMERA_REQUEST_CODE&&resultCode==RESULT_OK) {
+          // imagePath = data.getData();
+
+            //prod_img.setImageURI(imagePath);
+            Bundle extras = data.getExtras();
+            Bitmap imageBitmap = (Bitmap) extras.get("data");
+            prod_img.setImageBitmap(imageBitmap);
+            imagePath=getImageUri(getApplicationContext(),imageBitmap);
+
+            if(imagePath==null)
+                Toast.makeText(sellActivity.this, "null", Toast.LENGTH_SHORT).show();
+        }
+
+
     }
+    public Uri getImageUri(Context inContext, Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.PNG, 100, bytes);
+
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+        return Uri.parse(path);
+    }
+
+    public String getRealPathFromURI(Uri uri) {
+        Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+        cursor.moveToFirst();
+        int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+        return cursor.getString(idx);
+    }
+
 
 
     @Override
@@ -75,10 +129,17 @@ public class sellActivity extends AppCompatActivity {
         prod_img.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent =new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent,"Select Images"),PICK_IMAGE);
+                if(checkAndReqestPermissions()) {
+                    //Intent intent =new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    //startActivityForResult(intent,CAMERA_REQUEST_CODE);
+                    // intent.setType("image/*");
+                    // intent.setAction(Intent.ACTION_GET_CONTENT);
+                    // startActivityForResult(Intent.createChooser(intent,"Select Images"),PICK_IMAGE);
+                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    //intent.putExtra(MediaStore.EXTRA_OUTPUT, imagePath);
+                    startActivityForResult(intent, CAMERA_REQUEST_CODE);
+                }
+
             }
         });
         submit.setOnClickListener(new View.OnClickListener() {
@@ -124,6 +185,22 @@ public class sellActivity extends AppCompatActivity {
         reference.child("sellContent").child(productId).setValue(hashMap);
 
         Toast.makeText(sellActivity.this,"Thank you",Toast.LENGTH_SHORT).show();
+    }
+    public  boolean checkAndReqestPermissions(){
+        List<String> listPermissionsNeeded=new ArrayList<>();
+        for(String perm:appPermissions)
+        {
+            if(ContextCompat.checkSelfPermission(this,perm)!= PackageManager.PERMISSION_GRANTED)
+            {
+                listPermissionsNeeded.add(perm);
+            }
+        }
+        if(!listPermissionsNeeded.isEmpty())
+        {
+            ActivityCompat.requestPermissions(this,listPermissionsNeeded.toArray(new String[listPermissionsNeeded.size()]),PERMISSIONS_REQUEST_CODE);
+            return false;
+        }
+        return true;
     }
 
 }

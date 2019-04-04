@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.mcart">
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        />
+
 
     <application
         android:allowBackup="true"
@@ -9,7 +14,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".WishlistActivity"></activity>
+        <activity android:name=".WishlistActivity" />
         <activity android:name=".UpdateProfileActivity" />
         <activity android:name=".ProfileActivity" />
         <activity android:name=".ProductActivity" />
@@ -17,14 +22,20 @@
         <activity android:name=".RegActivity" />
         <activity android:name=".LoginActivity" />
         <activity android:name=".startActivity" />
-        <activity android:name=".MainActivity"
+        <activity
+            android:name=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@layout/searchable" />
         </activity>
+
     </application>
 
 </manifest>
