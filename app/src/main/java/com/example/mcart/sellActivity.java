@@ -1,11 +1,14 @@
 package com.example.mcart;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -14,12 +17,18 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -41,10 +50,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-public class sellActivity extends AppCompatActivity {
+public class sellActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     EditText Pro_name,Pro_info,Pro_price,Pro_address;
     Button submit;
-    String pro_name,pro_info,pro_price,pro_address;
+    Spinner spinner;
+    String pro_name,pro_info,pro_price,pro_address,pro_cat;
     FirebaseAuth firebaseAuth;
     FirebaseUser fuser;
     DatabaseReference reference;
@@ -52,19 +62,35 @@ public class sellActivity extends AppCompatActivity {
     private static int CAMERA_REQUEST_CODE=1;
     Uri imagePath=null;
     FirebaseStorage firebaseStorage;
+    Toolbar toolbar;
     String productId;
     String[] appPermissions={
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.CAMERA
     };
     private static final int PERMISSIONS_REQUEST_CODE=1240;
+    private static final int GALLERY_REQUEST_CODE=0421;
 
 
 
 
-   /* @Override
+
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if(requestCode==PICK_IMAGE && resultCode==RESULT_OK&&data.getData()!=null){
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==CAMERA_REQUEST_CODE&&resultCode==RESULT_OK) {
+
+            Bundle extras = data.getExtras();
+            Bitmap imageBitmap = (Bitmap) extras.get("data");
+            prod_img.setImageBitmap(imageBitmap);
+            imagePath=getImageUri(getApplicationContext(),imageBitmap);
+            if(imagePath==null)
+                Toast.makeText(sellActivity.this, "null", Toast.LENGTH_SHORT).show();
+
+
+        }else if(requestCode==GALLERY_REQUEST_CODE&&resultCode== Activity.RESULT_OK&& data != null && data.getData() != null){
+
             imagePath=data.getData();
             try {
                 Bitmap bitmap= MediaStore.Images.Media.getBitmap(getContentResolver(),imagePath);
@@ -74,41 +100,21 @@ public class sellActivity extends AppCompatActivity {
             }
 
         }
-        super.onActivityResult(requestCode, resultCode, data);
-    }*/
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==CAMERA_REQUEST_CODE&&resultCode==RESULT_OK) {
-          // imagePath = data.getData();
-
-            //prod_img.setImageURI(imagePath);
-            Bundle extras = data.getExtras();
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
-            prod_img.setImageBitmap(imageBitmap);
-            imagePath=getImageUri(getApplicationContext(),imageBitmap);
-
-            if(imagePath==null)
-                Toast.makeText(sellActivity.this, "null", Toast.LENGTH_SHORT).show();
-        }
 
 
     }
     public Uri getImageUri(Context inContext, Bitmap inImage) {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        inImage.compress(Bitmap.CompressFormat.PNG, 100, bytes);
-
-        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+       Bitmap OutImage = Bitmap.createScaledBitmap(inImage, 1000, 1000,true);
+       // BitmapFactory.Options options = new BitmapFactory.Options();
+       // options.inScaled = false;
+       // Bitmap OutImage = BitmapFactory.decodeResource(inContext.getResources(),inImage, options);
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), OutImage, "Title", null);
         return Uri.parse(path);
     }
 
-    public String getRealPathFromURI(Uri uri) {
-        Cursor cursor = getContentResolver().query(uri, null, null, null, null);
-        cursor.moveToFirst();
-        int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
-        return cursor.getString(idx);
-    }
+
+
 
 
 
@@ -116,6 +122,17 @@ public class sellActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sell);
+        toolbar = (Toolbar)findViewById(R.id.bar);
+        setSupportActionBar(toolbar);
+        setTitle("Sell Product");
+        toolbar.setNavigationIcon(R.drawable.back_white);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //What to do on back clicked
+                startActivity(new Intent(sellActivity.this,MainActivity.class));
+            }
+        });
         Pro_name=findViewById(R.id.product_name);
         Pro_info=findViewById(R.id.Product_info);
         Pro_price=findViewById(R.id.Product_price);
@@ -126,18 +143,60 @@ public class sellActivity extends AppCompatActivity {
         fuser=FirebaseAuth.getInstance().getCurrentUser();
         firebaseStorage= FirebaseStorage.getInstance();
         final StorageReference storageReference=firebaseStorage.getReference();
+
+        spinner =findViewById(R.id.product_cat);
+
+        // Spinner click listener
+        spinner.setOnItemSelectedListener(this);
+
+        // Spinner Drop down elements
+        List<String> categories = new ArrayList<String>();
+        categories.add("Calculator");
+        categories.add("Books");
+        categories.add("Drawfter");
+        categories.add("Cycle");
+        categories.add("Cooler");
+        categories.add("Router");
+
+        // Creating adapter for spinner
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, categories);
+
+        // Drop down layout style - list view with radio button
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        // attaching data adapter to spinner
+        spinner.setAdapter(dataAdapter);
+
+
+        final String[] colors = {"Choose from gallery", "open Camera"};
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         prod_img.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(checkAndReqestPermissions()) {
-                    //Intent intent =new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    //startActivityForResult(intent,CAMERA_REQUEST_CODE);
-                    // intent.setType("image/*");
-                    // intent.setAction(Intent.ACTION_GET_CONTENT);
-                    // startActivityForResult(Intent.createChooser(intent,"Select Images"),PICK_IMAGE);
-                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    //intent.putExtra(MediaStore.EXTRA_OUTPUT, imagePath);
-                    startActivityForResult(intent, CAMERA_REQUEST_CODE);
+
+                   // Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+                    //startActivityForResult(intent, CAMERA_REQUEST_CODE);
+                    builder.setItems(colors, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            // the user clicked on colors[which]
+                            if(which == 0){
+                                //first option clicked, do this...
+                                Intent intent=new Intent(Intent.ACTION_GET_CONTENT);
+                                intent.setType("image/*");
+                                startActivityForResult(intent,GALLERY_REQUEST_CODE);
+
+                            }else if(which == 1){
+                                //second option clicked, do this...
+                                Intent intent=new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                                startActivityForResult(intent,CAMERA_REQUEST_CODE);
+
+                            }
+                        }
+                    });
+                    builder.show();
                 }
 
             }
@@ -149,7 +208,8 @@ public class sellActivity extends AppCompatActivity {
                 pro_info=Pro_info.getText().toString().trim();
                 pro_price=Pro_price.getText().toString().trim();
                 pro_address=Pro_address.getText().toString().trim();
-                sell_prod(fuser.getUid(),pro_name,pro_info,pro_price,pro_address);
+
+                sell_prod(fuser.getUid(),pro_cat,pro_name,pro_info,pro_price,pro_address);
                 StorageReference imageReference=storageReference.child(productId);
                 UploadTask uploadTask=imageReference.putFile(imagePath);
                 uploadTask.addOnFailureListener(new OnFailureListener() {
@@ -172,9 +232,11 @@ public class sellActivity extends AppCompatActivity {
 
 
     }
-    private  void sell_prod(String seller,String pro_name,String pro_info,String pro_price,String pro_address){
+
+    private  void sell_prod(String seller,String pro_cat,String pro_name,String pro_info,String pro_price,String pro_address){
         DatabaseReference reference= FirebaseDatabase.getInstance().getReference();
         HashMap<String,Object> hashMap=new HashMap<>();
+        hashMap.put("Category",pro_cat);
         hashMap.put("seller",seller);
         hashMap.put("pro_name",pro_name);
         hashMap.put("pro_info",pro_info);
@@ -183,6 +245,9 @@ public class sellActivity extends AppCompatActivity {
         productId = reference.child("sellContent").push().getKey();
         hashMap.put("img_url",productId);
         reference.child("sellContent").child(productId).setValue(hashMap);
+        HashMap<String,Object> hashMap1=new HashMap<>();
+        hashMap1.put("Product_id",productId);
+        reference.child("Users").child(firebaseAuth.getUid()).child("sell_items").child(productId).setValue(hashMap1);
 
         Toast.makeText(sellActivity.this,"Thank you",Toast.LENGTH_SHORT).show();
     }
@@ -203,4 +268,18 @@ public class sellActivity extends AppCompatActivity {
         return true;
     }
 
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        // On selecting a spinner item
+        pro_cat = parent.getItemAtPosition(position).toString();
+
+        // Showing selected spinner item
+        Toast.makeText(parent.getContext(), "Selected: " + pro_cat, Toast.LENGTH_LONG).show();
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
 }

@@ -4,4 +4,5 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="search_hint">Close navigation drawer</string>
+    <string name="Rs">\u20B9</string>
 </resources>

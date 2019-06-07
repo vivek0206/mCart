@@ -24,6 +24,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class wishlistAdapter extends RecyclerView.Adapter<wishlistAdapter.productViewHolder>  {
 
     private Context mctx;
@@ -50,8 +51,16 @@ public class wishlistAdapter extends RecyclerView.Adapter<wishlistAdapter.produc
     @Override
     public void onBindViewHolder(@NonNull final wishlistAdapter.productViewHolder productViewHolder, int position) {
         final Pro_content pro_content=productList.get(position);
-        productViewHolder.prodName.setText(pro_content.getPro_name());
-        productViewHolder.prodInfo.setText(pro_content.getPro_price());
+        if(pro_content.getPro_name()!=null) {
+            productViewHolder.prodName.setText(pro_content.getPro_name());
+            productViewHolder.prodInfo.setText("\u20B9" +pro_content.getPro_price());
+        }else{
+            Toast.makeText(mctx,"no content",Toast.LENGTH_SHORT).show();
+        }
+
+
+
+
 
 
         firebaseAuth=FirebaseAuth.getInstance();
@@ -75,6 +84,7 @@ public class wishlistAdapter extends RecyclerView.Adapter<wishlistAdapter.produc
                 intent.putExtra("ProductInfo",pro_content.getPro_info());
                 intent.putExtra("ProductImage",pro_content.getImg_url());
                 intent.putExtra("ProductId",pro_content.getImg_url());
+                intent.putExtra("Seller",pro_content.getSeller());
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 mctx.startActivity(intent);
 

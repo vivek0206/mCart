@@ -1,9 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/bar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        app:popupTheme="@style/AppTheme.PopupOverlay"
+        app:titleTextColor="@color/white">
+
+    </android.support.v7.widget.Toolbar>
+
+<ScrollView android:layout_width="match_parent"
     android:layout_height="match_parent">
     <RelativeLayout
     android:layout_width="match_parent"
@@ -25,6 +37,12 @@
         android:hint="Product name"
         android:layout_marginTop="260dp"
         android:id="@+id/product_name"/>
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginTop="320dp"
+            android:id="@+id/product_cat"
+            ></Spinner>
     <EditText
         android:layout_width="match_parent"
         android:layout_height="60dp"
@@ -34,14 +52,14 @@
         android:maxLines="10"
         android:minLines="6"
         android:gravity="left|top"
-        android:layout_marginTop="320dp"
+        android:layout_marginTop="380dp"
         android:id="@+id/Product_info"
         />
     <EditText
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:hint="Price"
-        android:layout_marginTop="380dp"
+        android:layout_marginTop="440dp"
         android:id="@+id/Product_price"/>
     <EditText
         android:layout_width="match_parent"
@@ -52,15 +70,16 @@
         android:minLines="6"
         android:gravity="left|top"
         android:hint="Hostel Adress"
-        android:layout_marginTop="440dp"
+        android:layout_marginTop="500dp"
         android:id="@+id/Address"/>
 
     <Button
         android:id="@+id/pro_submit"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_marginTop="500dp"
+        android:layout_marginTop="560dp"
         android:hint="pro_submit" />
     </RelativeLayout>
 
 </ScrollView>
+</LinearLayout>

@@ -14,14 +14,16 @@
         android:id="@+id/menu_middle"
         android:checkableBehavior="single">
 
-        <item android:id="@+id/title"
+        <item android:id="@+id/calculator"
         android:title="Calculator" />
-        <item android:id="@+id/title1"
+        <item android:id="@+id/cooler"
             android:title="Cooler"/>
-        <item android:id="@+id/title2"
+        <item android:id="@+id/bicycle"
             android:title="bicycle"/>
-        <item android:id="@+id/title3"
+        <item android:id="@+id/drawfter"
             android:title="Drawfter"/>
+        <item android:id="@+id/book"
+            android:title="Books"/>
     </group>
     <group
         android:id="@+id/menu_bottom"
@@ -29,6 +31,10 @@
         <item
             android:id="@+id/nav_profile"
             android:title="Profile" >
+        </item>
+        <item
+            android:id="@+id/nav_myaccount"
+            android:title="My Account" >
         </item>
         <item
             android:id="@+id/nav_logout"

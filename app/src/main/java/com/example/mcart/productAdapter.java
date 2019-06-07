@@ -50,13 +50,13 @@ public class productAdapter extends RecyclerView.Adapter<productAdapter.productV
     public void onBindViewHolder(@NonNull final productViewHolder productViewHolder, int position) {
         final Pro_content pro_content=productList.get(position);
         productViewHolder.prodName.setText(pro_content.getPro_name());
-        productViewHolder.prodInfo.setText(pro_content.getPro_price());
+        productViewHolder.prodPrice.setText("\u20B9" + pro_content.getPro_price());
 
 
         firebaseAuth=FirebaseAuth.getInstance();
         firebaseDatabase= FirebaseDatabase.getInstance();
         firebaseStorage= FirebaseStorage.getInstance();
-        DatabaseReference ref=firebaseDatabase.getReference(firebaseAuth.getUid());
+//        DatabaseReference ref=firebaseDatabase.getReference(firebaseAuth.getUid());
         StorageReference storageReference=firebaseStorage.getReference();
         storageReference.child(pro_content.getImg_url()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
@@ -74,6 +74,7 @@ public class productAdapter extends RecyclerView.Adapter<productAdapter.productV
                 intent.putExtra("ProductInfo",pro_content.getPro_info());
                 intent.putExtra("ProductImage",pro_content.getImg_url());
                 intent.putExtra("ProductId",pro_content.getImg_url());
+                intent.putExtra("Seller",pro_content.getSeller());
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 mctx.startActivity(intent);
 
@@ -94,14 +95,14 @@ public class productAdapter extends RecyclerView.Adapter<productAdapter.productV
     }
 
     static class productViewHolder extends RecyclerView.ViewHolder{
-        TextView prodName,prodInfo;
+        TextView prodName,prodPrice;
         ImageView imageView,wish_list;
 
 
         public productViewHolder(@NonNull View itemView) {
             super(itemView);
             prodName=itemView.findViewById(R.id.prodName);
-            prodInfo=itemView.findViewById(R.id.prodInfo);
+            prodPrice=itemView.findViewById(R.id.prodPrice);
             imageView=itemView.findViewById(R.id.imageView);
             wish_list=itemView.findViewById(R.id.wishlist);
 

@@ -1,19 +1,28 @@
 package com.example.mcart;
 
 public class Pro_content {
-    private String Pro_name,Pro_price,Pro_info,seller,img_url;
+    private String Pro_name,Pro_price,Pro_info,seller,img_url,Category;
 
 
 
-    public Pro_content(String pro_name, String pro_info, String pro_price, String seller, String img_url) {
+    public Pro_content(String pro_name, String pro_info, String pro_price, String seller, String img_url,String pro_cat) {
         Pro_name = pro_name;
         Pro_info=pro_info;
+        Category=pro_cat;
         Pro_price = pro_price;
         this.seller = seller;
         this.img_url=img_url;
     }
     public Pro_content(){
 
+    }
+
+    public String getCategory() {
+        return Category;
+    }
+
+    public void setCategory(String category) {
+        Category = category;
     }
 
     public String getPro_name() {

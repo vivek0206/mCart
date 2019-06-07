@@ -1,10 +1,13 @@
 package com.example.mcart;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -24,23 +27,36 @@ public class WishlistActivity extends AppCompatActivity {
     wishlistAdapter adapter;
     DatabaseReference reference;
     FirebaseAuth firebaseAuth;
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wishlist);
+
+        toolbar = (Toolbar)findViewById(R.id.bar);
+        setSupportActionBar(toolbar);
         setTitle("WishList");
+        toolbar.setNavigationIcon(R.drawable.back_white);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //What to do on back clicked
+                startActivity(new Intent(WishlistActivity.this,MainActivity.class));
+            }
+        });
         recyclerView=findViewById(R.id.rcylrView_wishlist);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager=new LinearLayoutManager(getApplicationContext());
-        linearLayoutManager.setStackFromEnd(true);
+        linearLayoutManager.setStackFromEnd(false);
         recyclerView.setLayoutManager(linearLayoutManager);
         reference= FirebaseDatabase.getInstance().getReference("Users").child("wishlist");
         Pro_content =new ArrayList<>();
 
         reference.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot)
+            {
                 wishlist_Id();
             }
 
@@ -82,7 +98,7 @@ public class WishlistActivity extends AppCompatActivity {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                   // Toast.makeText(WishlistActivity.this, "getting", Toast.LENGTH_SHORT).show();
+                   //5 Toast.makeText(WishlistActivity.this, "getting", Toast.LENGTH_SHORT).show();
                     Pro_content chat = dataSnapshot.getValue(Pro_content.class);
                     Pro_content.add(chat);
                     adapter = new wishlistAdapter(WishlistActivity.this, Pro_content);

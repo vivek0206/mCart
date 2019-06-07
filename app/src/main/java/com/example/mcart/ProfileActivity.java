@@ -5,6 +5,10 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -28,24 +32,56 @@ import com.squareup.picasso.Picasso;
 public class ProfileActivity extends AppCompatActivity {
     ImageView imgProfile;
     TextView pname,pemail,phostel,proom,pcontact;
-    Button updateProfile;
     FirebaseAuth firebaseAuth;
     FirebaseDatabase firebaseDatabase;
     FirebaseStorage firebaseStorage;
+    FirebaseUser user;
+    private Toolbar toolbar;
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.profile_dot_menu,menu);
+        return true;
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if(id == R.id.Profile){
+            startActivity(new Intent(ProfileActivity.this,UpdateProfileActivity.class));
+        }
+
+
+        return super.onOptionsItemSelected(item);
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+        toolbar = (Toolbar)findViewById(R.id.bar);
+        setSupportActionBar(toolbar);
+        setTitle("Profile");
+       toolbar.setNavigationIcon(R.drawable.back_white);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //What to do on back clicked
+                startActivity(new Intent(ProfileActivity.this,MainActivity.class));
+            }
+        });
+
+
         imgProfile=findViewById(R.id.p_Profile);
         pname=findViewById(R.id.p_name);
         pemail=findViewById(R.id.p_email);
         phostel=findViewById(R.id.p_Hostel);
         proom=findViewById(R.id.p_Room);
         pcontact=findViewById(R.id.p_phone);
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        user = FirebaseAuth.getInstance().getCurrentUser();
         String email = user.getEmail();
         pemail.setText(email);
-        updateProfile=findViewById(R.id.up_Profile);
         firebaseAuth=FirebaseAuth.getInstance();
         firebaseDatabase= FirebaseDatabase.getInstance();
         firebaseStorage= FirebaseStorage.getInstance();
@@ -64,7 +100,8 @@ public class ProfileActivity extends AppCompatActivity {
                         phostel.setText(userprofile.getHostel());
                         proom.setText(userprofile.getRoom());
                         pcontact.setText(userprofile.getContact());
-                        final StorageReference storageReference=firebaseStorage.getReference();
+                        Picasso.get().load(user.getPhotoUrl().toString()).centerInside().fit().into(imgProfile);
+                        /*final StorageReference storageReference=firebaseStorage.getReference();
 
 
                         storageReference.child(firebaseAuth.getUid()).child("Profile Pic").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
@@ -78,7 +115,7 @@ public class ProfileActivity extends AppCompatActivity {
                                 // File not found
                             }
 
-                        });
+                        });*/
                     }
 
 
@@ -86,12 +123,6 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 Toast.makeText(ProfileActivity.this,databaseError.getCode(), Toast.LENGTH_SHORT).show();
-            }
-        });
-        updateProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(ProfileActivity.this,UpdateProfileActivity.class));
             }
         });
     }

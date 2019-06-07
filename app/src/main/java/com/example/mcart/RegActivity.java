@@ -49,9 +49,9 @@ public class RegActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
-                                Toast.makeText(RegActivity.this, "reg success",
-                                        Toast.LENGTH_SHORT).show();
+                                Toast.makeText(RegActivity.this, "registration successful", Toast.LENGTH_SHORT).show();
                                 startActivity(new Intent(RegActivity.this, MainActivity.class));
+                                finish();
 
                             } else {
                                 // If sign in fails, display a message to the user.

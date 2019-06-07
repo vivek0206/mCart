@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -36,6 +37,7 @@ public class UpdateProfileActivity extends AppCompatActivity {
     Uri imagPath;
     StorageReference storageReference;
     FirebaseStorage firebaseStorage;
+    Toolbar toolbar;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -56,6 +58,17 @@ public class UpdateProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_profile);
+        toolbar = (Toolbar)findViewById(R.id.bar);
+        setSupportActionBar(toolbar);
+        setTitle("Update Profile");
+        toolbar.setNavigationIcon(R.drawable.back_white);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //What to do on back clicked
+                startActivity(new Intent(UpdateProfileActivity.this,MainActivity.class));
+            }
+        });
         username=findViewById(R.id.u_name);
         hostel=findViewById(R.id.u_Hostel);
         room=findViewById(R.id.u_Room);

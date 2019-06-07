@@ -3,6 +3,8 @@ package com.example.mcart;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -10,6 +12,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -52,17 +55,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     DrawerLayout drawer;
     private Toolbar toolbar;
-    private NavigationView nvDrawer;
-    private ActionBarDrawerToggle mDrawerToggle;
 
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu,menu);
-       //
-        // MenuItem menuItem=findViewById(R.id.search);
-//        SearchView searchView=(SearchView)menuItem.getActionView();
         SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
         searchView.setOnQueryTextListener(this);
 
@@ -103,9 +101,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         recyclerView=findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
-        LinearLayoutManager linearLayoutManager=new LinearLayoutManager(getApplicationContext());
-        linearLayoutManager.setStackFromEnd(true);
-        recyclerView.setLayoutManager(linearLayoutManager);
+        GridLayoutManager gridLayoutManager=new GridLayoutManager(getApplicationContext(),2);
+       // GridLayoutManager.setStackFromEnd(false);
+        recyclerView.setLayoutManager(gridLayoutManager);
         //fuser= FirebaseAuth.getInstance().getCurrentUser();
         reference= FirebaseDatabase.getInstance().getReference("sellContent");
 
@@ -114,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                // User user=dataSnapshot.getValue(User.class);
-                readMessage();
+                read_items();
             }
 
             @Override
@@ -144,8 +142,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    private void readMessage(){
-        //Pro_content =
+    private void read_items(){
+
         reference= FirebaseDatabase.getInstance().getReference("sellContent");
         reference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -153,7 +151,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Pro_content.clear();
                 for(DataSnapshot snapshot:dataSnapshot.getChildren()){
                     Pro_content Chat=snapshot.getValue(Pro_content.class);
-                        Pro_content.add(Chat);
+                    Pro_content.add(Chat);
                     //}
                     adapter =new productAdapter(MainActivity.this,Pro_content);
                     recyclerView.setAdapter(adapter);
@@ -172,25 +170,63 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.title) {
-            Toast.makeText(MainActivity.this,"title",Toast.LENGTH_SHORT).show();
-        } else if (id == R.id.title1) {
-            Toast.makeText(MainActivity.this,"title1",Toast.LENGTH_SHORT).show();
-        } else if (id == R.id.title2) {
-            Toast.makeText(MainActivity.this,"title2",Toast.LENGTH_SHORT).show();
+        if (id == R.id.drawfter) {
+            Toast.makeText(MainActivity.this,"drawfter",Toast.LENGTH_SHORT).show();
+            set_content("Drawfter");
+
+        } else if (id == R.id.calculator) {
+            Toast.makeText(MainActivity.this,"calculator",Toast.LENGTH_SHORT).show();
+            set_content("Calculator");
+
+        } else if (id == R.id.bicycle) {
+            Toast.makeText(MainActivity.this,"bicycle",Toast.LENGTH_SHORT).show();
+            set_content("bicycle");
+        }
+        else if (id == R.id.cooler) {
+            Toast.makeText(MainActivity.this,"cooler",Toast.LENGTH_SHORT).show();
+            set_content("cooler");
+        }
+        else if (id == R.id.book) {
+            Toast.makeText(MainActivity.this,"books",Toast.LENGTH_SHORT).show();
+            set_content("books");
         }
         else if (id == R.id.nav_profile) {
             startActivity(new Intent(MainActivity.this,ProfileActivity.class));
         } else if (id == R.id.nav_logout) {
             logout();
         }
+        else if (id == R.id.nav_myaccount) {
+            startActivity(new Intent(MainActivity.this,myAccount.class));
+        } else if (id == R.id.nav_logout) {
+            logout();
+        }
         else if (id == R.id.back) {
+
             drawer.closeDrawer(GravityCompat.START);
+            read_items();
         }
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
 
+    }
+
+    public void set_content(String s)
+    {
+        String userinput=s.toLowerCase();
+        int count=0;
+        List<Pro_content> newList=new ArrayList<>();
+        for(Pro_content pro:Pro_content)
+        {
+            if(pro.getCategory().toLowerCase().contains(userinput))
+            {
+                newList.add(pro);
+                count=1;
+            }
+        }
+        if(count==0)
+            Toast.makeText(MainActivity.this,"Not Found",Toast.LENGTH_LONG).show();
+        adapter.updateList(newList);
     }
 
     @Override
